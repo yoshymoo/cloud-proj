@@ -1,4 +1,3 @@
-// src/aws-exports.js (mock version to prevent build error)
 const awsmock = {
   aws_project_region: "us-east-1",
   aws_cognito_region: "us-east-1",

@@ -9,8 +9,9 @@ import {
   Task,
 } from "./mock/mockTasks";
 import { getCurrentUser } from "./mock/mockAuth";
-import Amplify from "aws-amplify";
-import awsExports from "./aws-exports";
+import { Amplify } from "aws-amplify";
+import awsExports from "./aws-exports"; 
+
 
 Amplify.configure(awsExports);
 
