@@ -1,25 +1,35 @@
 import React from "react";
+import { Task } from "../mock/mockTasks";
 
-type TaskItemProps = {
-  taskName: string;
-  isCompleted: boolean;
-  onToggle: () => void;
-  onDelete: () => void;
-};
+interface TaskItemProps {
+  task: Task;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+}
 
-const TaskItem: React.FC<TaskItemProps> = ({ taskName, isCompleted, onToggle, onDelete }) => {
+const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete }) => {
   return (
-    <li style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-      <span
-        style={{
-          textDecoration: isCompleted ? "line-through" : "none",
-          cursor: "pointer",
+    <li
+      onClick={() => onToggle(task.id)}
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "0.75rem",
+        borderBottom: "1px solid #ddd",
+        cursor: "pointer",
+        fontSize: "1.25rem", // ⬅️ Increase font size here
+        color: task.isCompleted ? "#999" : "#000",
+        textDecoration: task.isCompleted ? "line-through" : "none",
+      }}
+    >
+      {task.taskName}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete(task.id);
         }}
-        onClick={onToggle}
       >
-        {taskName}
-      </span>
-      <button onClick={onDelete} style={{ marginLeft: "1rem" }}>
         🗑️
       </button>
     </li>

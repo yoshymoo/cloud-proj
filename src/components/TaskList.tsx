@@ -1,12 +1,12 @@
 import React from "react";
-import TaskItem from "./TaskItem";
 import { Task } from "../mock/mockTasks";
+import TaskItem from "./TaskItem";
 
-type TaskListProps = {
+interface TaskListProps {
   tasks: Task[];
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
-};
+}
 
 const TaskList: React.FC<TaskListProps> = ({ tasks, onToggle, onDelete }) => {
   return (
@@ -14,10 +14,9 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onToggle, onDelete }) => {
       {tasks.map((task) => (
         <TaskItem
           key={task.id}
-          taskName={task.taskName}
-          isCompleted={task.isCompleted}
-          onToggle={() => onToggle(task.id)}
-          onDelete={() => onDelete(task.id)}
+          task={task}
+          onToggle={onToggle}
+          onDelete={onDelete}
         />
       ))}
     </ul>

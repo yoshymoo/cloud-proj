@@ -28,22 +28,11 @@ const App: React.FC = () => {
   const [authError, setAuthError] = useState("");
 
   useEffect(() => {
-    const loadUser = async () => {
-      const current = await getCurrentUser();
-      setUser(current);
-      if (current) {
-        const stored = localStorage.getItem(`mockTasks-${current.username}`);
-        setTasks(stored ? JSON.parse(stored) : await fetchTasks(current.username));
-      }
-    };
-    loadUser();
+    // Force logout on every reload to simulate session expiration
+    localStorage.removeItem("mockUser");
+    setUser(null);
   }, []);
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem(`mockTasks-${user.username}`, JSON.stringify(tasks));
-    }
-  }, [tasks, user]);
+  
 
   const handleAddTask = async () => {
     if (!newTask.trim() || !user) return;
@@ -62,13 +51,17 @@ const App: React.FC = () => {
     if (!user) return;
     const updated = await toggleTask(id, user.username);
     if (updated) {
-      setTasks((prev) =>
-        prev.map((t) =>
-          t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
-        )
+      const updatedTasks = tasks.map((t) =>
+        t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
+      );
+      setTasks(updatedTasks);
+      localStorage.setItem(
+        `mockTasks-${user.username}`,
+        JSON.stringify(updatedTasks)
       );
     }
   };
+  
 
   const handleLogout = async () => {
     if (user) {
