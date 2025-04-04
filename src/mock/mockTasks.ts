@@ -1,36 +1,29 @@
-// src/mock/mockTasks.ts
-
 export interface Task {
   id: string;
+  userId: string;
   taskName: string;
   isCompleted: boolean;
   createdAt: string;
 }
 
-let tasks: Task[] = [
-  {
-    id: "1",
-    taskName: "Buy groceries",
-    isCompleted: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    taskName: "Submit report",
-    isCompleted: true,
-    createdAt: new Date().toISOString(),
-  },
-];
+// In-memory simulation of tasks (for runtime only)
+let tasks: Task[] = [];
 
-// Simulate fetching all tasks
-export const fetchTasks = async (): Promise<Task[]> => {
-  return new Promise((resolve) => setTimeout(() => resolve(tasks), 300));
+// Simulates fetching tasks that belong to a specific user
+export const fetchTasks = async (userId: string): Promise<Task[]> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const userTasks = tasks.filter((t) => t.userId === userId);
+      resolve(userTasks);
+    }, 300);
+  });
 };
 
-// Add a new task
-export const addTask = async (taskName: string): Promise<Task> => {
+// Simulates adding a new task for the logged-in user
+export const addTask = async (taskName: string, userId: string): Promise<Task> => {
   const newTask: Task = {
     id: Date.now().toString(),
+    userId,
     taskName,
     isCompleted: false,
     createdAt: new Date().toISOString(),
@@ -39,9 +32,9 @@ export const addTask = async (taskName: string): Promise<Task> => {
   return newTask;
 };
 
-// Toggle complete status
-export const toggleTask = async (id: string): Promise<Task | null> => {
-  const task = tasks.find((t) => t.id === id);
+// Simulates toggling task completion, ensuring the task belongs to the user
+export const toggleTask = async (id: string, userId: string): Promise<Task | null> => {
+  const task = tasks.find((t) => t.id === id && t.userId === userId);
   if (task) {
     task.isCompleted = !task.isCompleted;
     return task;
@@ -49,7 +42,7 @@ export const toggleTask = async (id: string): Promise<Task | null> => {
   return null;
 };
 
-// Delete a task
-export const deleteTask = async (id: string): Promise<void> => {
-  tasks = tasks.filter((t) => t.id !== id);
+// Simulates deleting a task, only if it belongs to the user
+export const deleteTask = async (id: string, userId: string): Promise<void> => {
+  tasks = tasks.filter((t) => !(t.id === id && t.userId === userId));
 };
